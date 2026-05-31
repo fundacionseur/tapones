@@ -341,40 +341,50 @@
     input.value = Math.max(1, Math.min(999, (parseInt(input.value) || 1) + delta));
   }
 
-  async function enviar() {
+  function enviar() {
     const params = leerParams();
     const btn    = document.getElementById('btn-enviar');
-    const errDiv = document.getElementById('error-envio');
 
     btn.disabled    = true;
     btn.textContent = 'Enviando...';
-    errDiv.style.display = 'none';
 
-    // IDs de los campos del Google Form
     const FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSdZE-V9i_jHEy591rzTEzZgf5V3DaevsyFWpoI5P1TYwuwUkg/formResponse';
 
-    const formData = new FormData();
-    formData.append('entry.1345269833', params.id);
-    formData.append('entry.220737119',  params.entidad);
-    formData.append('entry.589745683',  document.getElementById('num-bolsas').value);
-    formData.append('entry.779050025',  document.getElementById('peso').value || '');
-    formData.append('entry.973325633',  document.getElementById('comentarios').value || '');
+    // Crear un formulario oculto y enviarlo via iframe para evitar bloqueos CORS
+    const iframe = document.createElement('iframe');
+    iframe.name = 'hidden-iframe';
+    iframe.style.display = 'none';
+    document.body.appendChild(iframe);
 
-    try {
-      await fetch(FORM_URL, {
-        method: 'POST',
-        mode: 'no-cors',
-        body: formData
-      });
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = FORM_URL;
+    form.target = 'hidden-iframe';
 
-      document.getElementById('formulario').style.display   = 'none';
-      document.getElementById('pantalla-exito').style.display = 'block';
+    const campos = {
+      'entry.1345269833': params.id,
+      'entry.220737119':  params.entidad,
+      'entry.589745683':  document.getElementById('num-bolsas').value,
+      'entry.779050025':  document.getElementById('peso').value || '0',
+      'entry.973325633':  document.getElementById('comentarios').value || ''
+    };
 
-    } catch (err) {
-      btn.disabled    = false;
-      btn.textContent = 'Solicitar recogida →';
-      errDiv.style.display = 'block';
+    for (const [name, value] of Object.entries(campos)) {
+      const input = document.createElement('input');
+      input.type  = 'hidden';
+      input.name  = name;
+      input.value = value;
+      form.appendChild(input);
     }
+
+    document.body.appendChild(form);
+    form.submit();
+
+    // Mostrar pantalla de éxito tras un breve delay
+    setTimeout(function() {
+      document.getElementById('formulario').style.display    = 'none';
+      document.getElementById('pantalla-exito').style.display = 'block';
+    }, 1500);
   }
 
   leerParams();
