@@ -311,8 +311,26 @@
 
 <script>
   // Parámetros de configuración global (cambiar aquí cuando cambie el niño/a)
-  const IMAGEN_URL = 'https://fundacionseur.github.io/tapones/ivanna.png';
-  const MENSAJE    = 'Ivanna necesita nuestros tapones para mejorar su calidad de vida.... ¿Le ayudamos?';
+  // URL del script de configuración - actualiza con tu URL tras desplegar
+  const CONFIG_URL = 'https://script.google.com/macros/s/AKfycbzsjZQ6SiL86Qp37dq1kQ_ZsN4GModnV3oRpG7s-b3qUmoCrej7GbUnKe4pFXHma1w4/exec';
+
+  // Carga imagen y mensaje desde Google Sheets via Apps Script
+  async function cargarConfiguracion() {
+    try {
+      const resp   = await fetch(CONFIG_URL);
+      const config = await resp.json();
+      if (config.imagen) {
+        document.querySelector('.cabecera').style.backgroundImage = "url('" + config.imagen + "')";
+      }
+      const bloqMsg = document.getElementById('bloque-mensaje');
+      if (config.mensaje) {
+        bloqMsg.textContent = config.mensaje;
+        bloqMsg.style.display = 'block';
+      }
+    } catch(e) {
+      console.log('No se pudo cargar la configuración');
+    }
+  }
 
   function leerParams() {
     const p = new URLSearchParams(window.location.search);
@@ -327,11 +345,6 @@
     document.getElementById('mostrar-id').textContent        = id        || 'No disponible';
     document.getElementById('mostrar-entidad').textContent   = entidad   || 'No disponible';
     document.getElementById('mostrar-direccion').textContent = direccion || 'No disponible';
-
-    // Cargar imagen y mensaje
-    document.querySelector('.cabecera').style.backgroundImage = "url('" + IMAGEN_URL + "')";
-    const bloqMsg = document.getElementById('bloque-mensaje');
-    if (MENSAJE) { bloqMsg.textContent = MENSAJE; bloqMsg.style.display = 'block'; }
 
     return { id, entidad, direccion };
   }
@@ -376,6 +389,7 @@
   }
 
   leerParams();
+  cargarConfiguracion();
 </script>
 </body>
 </html>
