@@ -348,39 +348,27 @@
     btn.disabled    = true;
     btn.textContent = 'Enviando...';
 
-    const FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSdZE-V9i_jHEy591rzTEzZgf5V3DaevsyFWpoI5P1TYwuwUkg/formResponse';
+    // Construir URL de envío directo al Google Form
+    const base = 'https://docs.google.com/forms/d/e/1FAIpQLSdZE-V9i_jHEy591rzTEzZgf5V3DaevsyFWpoI5P1TYwuwUkg/formResponse';
+    const bolsas      = document.getElementById('num-bolsas').value;
+    const peso        = document.getElementById('peso').value || '0';
+    const comentarios = encodeURIComponent(document.getElementById('comentarios').value || '');
+    const id          = encodeURIComponent(params.id);
+    const entidad     = encodeURIComponent(params.entidad);
 
-    // Crear un formulario oculto y enviarlo via iframe para evitar bloqueos CORS
-    const iframe = document.createElement('iframe');
-    iframe.name = 'hidden-iframe';
-    iframe.style.display = 'none';
-    document.body.appendChild(iframe);
+    const url = base
+      + '?entry.1345269833=' + id
+      + '&entry.220737119='  + entidad
+      + '&entry.589745683='  + bolsas
+      + '&entry.779050025='  + peso
+      + '&entry.973325633='  + comentarios
+      + '&submit=Submit';
 
-    const form = document.createElement('form');
-    form.method = 'POST';
-    form.action = FORM_URL;
-    form.target = 'hidden-iframe';
+    // Enviar via imagen invisible — técnica que evita CORS completamente
+    const img = new Image();
+    img.src = url;
 
-    const campos = {
-      'entry.1345269833': params.id,
-      'entry.220737119':  params.entidad,
-      'entry.589745683':  document.getElementById('num-bolsas').value,
-      'entry.779050025':  document.getElementById('peso').value || '0',
-      'entry.973325633':  document.getElementById('comentarios').value || ''
-    };
-
-    for (const [name, value] of Object.entries(campos)) {
-      const input = document.createElement('input');
-      input.type  = 'hidden';
-      input.name  = name;
-      input.value = value;
-      form.appendChild(input);
-    }
-
-    document.body.appendChild(form);
-    form.submit();
-
-    // Mostrar pantalla de éxito tras un breve delay
+    // Mostrar pantalla de éxito
     setTimeout(function() {
       document.getElementById('formulario').style.display    = 'none';
       document.getElementById('pantalla-exito').style.display = 'block';
