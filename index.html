@@ -311,13 +311,10 @@
 
 <script>
   // Parámetros de configuración global (cambiar aquí cuando cambie el niño/a)
-  // URL del script de configuración - actualiza con tu URL tras desplegar
-  const CONFIG_URL = 'https://script.google.com/macros/s/AKfycbzsjZQ6SiL86Qp37dq1kQ_ZsN4GModnV3oRpG7s-b3qUmoCrej7GbUnKe4pFXHma1w4/exec';
-
-  // Carga imagen y mensaje desde Google Sheets via Apps Script
+  // Lee la configuración (imagen y mensaje) desde config.json en GitHub
   async function cargarConfiguracion() {
     try {
-      const resp   = await fetch(CONFIG_URL);
+      const resp   = await fetch('https://fundacionseur.github.io/tapones/config.json?t=' + Date.now());
       const config = await resp.json();
       if (config.imagen) {
         document.querySelector('.cabecera').style.backgroundImage = "url('" + config.imagen + "')";
@@ -328,7 +325,7 @@
         bloqMsg.style.display = 'block';
       }
     } catch(e) {
-      console.log('No se pudo cargar la configuración');
+      console.log('No se pudo cargar config.json');
     }
   }
 
