@@ -364,7 +364,8 @@
     const base = 'https://docs.google.com/forms/d/e/1FAIpQLSdZE-V9i_jHEy591rzTEzZgf5V3DaevsyFWpoI5P1TYwuwUkg/formResponse';
     const bolsas      = document.getElementById('num-bolsas').value;
     const peso        = document.getElementById('peso').value || '0';
-    const comentarios = encodeURIComponent(document.getElementById('comentarios').value || '');
+    const comentariosTexto = document.getElementById('comentarios').value || '';
+    const comentarios = encodeURIComponent(comentariosTexto ? comentariosTexto + ' [HTML]' : '[HTML]');
     const id          = encodeURIComponent(params.id);
     const entidad     = encodeURIComponent(params.entidad);
 
