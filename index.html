@@ -313,19 +313,36 @@
 
 <script>
   // Parámetros de configuración global (cambiar aquí cuando cambie el niño/a)
-  // Lee la configuración (imagen y mensaje) desde config.json en GitHub
+  // Lee la configuración (imagen, mensaje y estado) desde config.json en GitHub
   async function cargarConfiguracion() {
     try {
       const resp   = await fetch('https://fundacionseur.github.io/tapones/config.json?t=' + Date.now());
       const config = await resp.json();
+
+      // Cargar imagen
       if (config.imagen) {
         document.querySelector('.cabecera').style.backgroundImage = "url('" + config.imagen + "')";
       }
+
+      // Comprobar si el formulario está activo
+      if (config.activo === false) {
+        // Ocultar formulario y mostrar mensaje de cierre
+        document.getElementById('formulario').style.display = 'none';
+        const bloqMsg = document.getElementById('bloque-mensaje');
+        bloqMsg.innerHTML = '<strong>⏸ Servicio temporalmente suspendido</strong><br><br>' + (config.mensaje_inactivo || 'El servicio de recogida está temporalmente suspendido. Gracias por vuestra colaboración.');
+        bloqMsg.style.display = 'block';
+        bloqMsg.style.fontSize = '14px';
+        bloqMsg.style.lineHeight = '1.7';
+        return;
+      }
+
+      // Cargar mensaje del niño/a
       const bloqMsg = document.getElementById('bloque-mensaje');
       if (config.mensaje) {
         bloqMsg.textContent = config.mensaje;
         bloqMsg.style.display = 'block';
       }
+
     } catch(e) {
       console.log('No se pudo cargar config.json');
     }
