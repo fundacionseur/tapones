@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reposición de Bolsas Pickup - Fundación SEUR</title>
+  <style>
+    body { font-family: Arial, sans-serif; background-color: #f4f6f9; color: #333; margin: 0; padding: 20px; }
+    .container { max-width: 600px; margin: 0 auto; background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); border-top: 6px solid #005596; }
+    h1 { color: #005596; font-size: 20px; margin-bottom: 8px; }
+    .subtitulo { font-size: 13px; color: #555; margin-bottom: 18px; }
+    .aviso { background-color: #fff8e1; border-left: 4px solid #ffc107; padding: 12px; font-size: 13px; margin-bottom: 20px; line-height: 1.5; }
+    .form-group { margin-bottom: 16px; }
+    label { display: block; font-weight: bold; margin-bottom: 6px; font-size: 14px; }
+    input[type="text"], textarea { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; font-size: 14px; }
+    input[readonly] { background-color: #e9ecef; color: #333; cursor: not-allowed; border-color: #ced4da; font-weight: bold; }
+    button { background-color: #005596; color: white; border: none; padding: 13px 24px; font-size: 16px; border-radius: 4px; cursor: pointer; width: 100%; font-weight: bold; }
+    button:hover { background-color: #003d6b; }
+    .error { color: #d32f2f; background: #ffebee; padding: 12px; border-radius: 4px; font-weight: bold; display: none; margin-bottom: 15px; }
+    .exito { color: #2e7d32; background: #e8f5e9; padding: 18px; border-radius: 4px; display: none; text-align: center; font-weight: bold; line-height: 1.5; }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h1>REPOSICIÓN DE PACK DE BOLSAS PARA LOS TAPONES</h1>
+  <div class="subtitulo">Formulario exclusivo para Pickups colaboradoras. La dirección de envío se obtiene automáticamente con su ID y nombre registrado.</div>
+
+  <div class="aviso">
+    <strong>Importante:</strong> Los datos identificativos de su establecimiento están bloqueados para evitar errores en el envío. Para cualquier consulta puede escribirnos a <strong>logistica.fundacion@seur.net</strong>.
+  </div>
+
+  <div id="msgError" class="error">Error: Enlace o código QR incompleto. Contacte con Fundación SEUR para recibir su enlace personalizado.</div>
+  <div id="msgExito" class="exito">¡Solicitud registrada correctamente!<br>En breve recibirá su pack de bolsas en su establecimiento.</div>
+
+  <form id="formBolsas" target="hidden_iframe" onsubmit="enviarFormulario()">
+    <div class="form-group">
+      <label for="idCentro">Su ID en Fundación SEUR</label>
+      <input type="text" id="idCentro" name="entry.1345269833" readonly required>
+    </div>
+
+    <div class="form-group">
+      <label for="nombreCentro">Nombre del Centro</label>
+      <input type="text" id="nombreCentro" name="entry.220737119" readonly required>
+    </div>
+
+    <div class="form-group">
+      <label for="comentarios">Comentarios (Opcional):</label>
+      <textarea id="comentarios" name="entry.1833969844" rows="3" placeholder="Ej. Necesitamos retirada de bolsa llena y reposición de nueva bolsa..."></textarea>
+    </div>
+
+    <button type="submit" id="btnEnviar">Solicitar Envío de Bolsas</button>
+  </form>
+
+  <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;"></iframe>
+</div>
+
+<script>
+  const GOOGLE_FORM_ACTION = "https://docs.google.com/forms/d/e/1FAIpQLSdiZlbtY83qB7-lc607KXsiZ0P_-99CRP0jU5ogTJCqLrPAdg/formResponse";
+  document.getElementById("formBolsas").action = GOOGLE_FORM_ACTION;
+
+  window.onload = function() {
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get("id");
+    // Admite tanto ?centro= como ?entidad=
+    const centro = params.get("centro") || params.get("entidad");
+
+    if (!id || !centro) {
+      document.getElementById("msgError").style.display = "block";
+      document.getElementById("btnEnviar").disabled = true;
+      document.getElementById("btnEnviar").style.backgroundColor = "#ccc";
+    } else {
+      document.getElementById("idCentro").value = id.trim().toUpperCase();
+      document.getElementById("nombreCentro").value = centro.trim();
+    }
+  };
+
+  function enviarFormulario() {
+    setTimeout(function() {
+      document.getElementById("formBolsas").style.display = "none";
+      document.getElementById("msgExito").style.display = "block";
+    }, 500);
+  }
+</script>
+
+</body>
+</html>
