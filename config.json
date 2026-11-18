@@ -1,6 +1,6 @@
 {
   "imagen": "https://fundacionseur.github.io/tapones/imagen_protagonista.png",
   "mensaje": "GRACIAS POR AYUDAR A JIMENA A CONSEGUIR SU SILLA DE RUEDAS ;)",
-  "activo": true,
-  "mensaje_inactivo": "Como cada año, el servicio de recogida de tapones estará temporalmente suspendido en el periodo desde el Black Friday a Navidad. Lo reactivaremos a mediados de enero. ¡Gracias por su comprensión."
+  "activo": false,
+  "mensaje_inactivo": "DEBIDO A LA CAMPAÑA DE BLACK FRIDAY Y NAVIDAD EN SEUR, NO SE REALIZARÁN RECOGIDAS DE TAPONES DESDE 18/11/2026 AL 18/01 /2027 AMBOS INCLUIDOS. \nSIEMPRE TENDRÁN A SU DISPOSICIÓN LOS PUNTOS SEUR PARA DEPOSITARLOS EN ESTE TIEMPO.\nFUNDACION SEUR"
 }
